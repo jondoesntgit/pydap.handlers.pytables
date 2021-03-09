@@ -20,7 +20,7 @@ class HDF5Handler(BaseHandler):
 
     """A simple handler for HDF5 files based on PyTables."""
 
-    __version__ = get_distribution("pydap.handlers.hdf5").version
+    #__version__ = get_distribution("pydap.handlers.hdf5").version
     extensions = re.compile(r"^.*\.(h5|hdf5)$", re.IGNORECASE)
 
     def __init__(self, filepath):
@@ -28,7 +28,7 @@ class HDF5Handler(BaseHandler):
 
         try:
             self.fp = tables.open_file(filepath, 'r')
-        except Exception, exc:
+        except Exception as exc:
             message = 'Unable to open file %s: %s' % (filepath, exc)
             raise OpenFileError(message)
 
@@ -57,8 +57,8 @@ def build_dataset(target, fp, node):
                 node._v_name, node, None)
         elif isinstance(node, tables.Table):
             sequence = target[node._v_name] = SequenceType(node._v_name)
-            for name in table.colnames:
-                sequence[name] = BaseType(name, table.coldtypes[name])
+            for name in node.colnames:
+                sequence[name] = BaseType(name, node.coldtypes[name])
             sequence.data = node.read()
 
 
